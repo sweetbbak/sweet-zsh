@@ -118,7 +118,11 @@ function __check_plugin() {
         __source "${1}"
     else
         cd "$HOME/.config/zsh" || echo "couldnt CD"
-        git clone "${2}" 
+        dirname="$(basename "$2")"
+        dirname="${dirname/.git/}"
+
+        [  ! -d "$dirname" ] && git clone "${2}" 
+
         [ -f "$1" ] && source "${1}"
         [ ! -f "$1" ] && echo -e "[WARN] error loading plugin [$2]"
     fi
@@ -127,8 +131,6 @@ function __check_plugin() {
 # user defined aliases - functiongs
 __source "$HOME/.config/zsh/alias.zsh"
 __source "$HOME/.config/zsh/functions.zsh"
-# default fzf options
-__source "$HOME/.config/zsh/fzf.zsh"
 
 # double tap ESC to prepend line with SUDO
 [ ! -f  "$HOME/.config/zsh/zsh-sudo-plugin.zsh" ] && {
@@ -144,7 +146,7 @@ __source "$HOME/.config/zsh/zsh-sudo-plugin.zsh"
 __check_plugin "$HOME/.config/zsh/fzf-tab/fzf-tab.plugin.zsh" "https://github.com/Aloxaf/fzf-tab.git"
 
 # fzf reverse ctrl_r history search
-__check_plugin "$HOME/.config/zsh/fzf-history/zsh-fzf-history-search.zsh" "https://github.com/joshskidmore/zsh-fzf-history-search.git"
+__check_plugin "$HOME/.config/zsh/zsh-fzf-history-search/zsh-fzf-history-search.zsh" "https://github.com/joshskidmore/zsh-fzf-history-search.git"
 
 # auto suggestions
 __check_plugin "$HOME/.config/zsh/zsh-autosuggestions/zsh-autosuggestions.zsh" "https://github.com/zsh-users/zsh-autosuggestions.git"
