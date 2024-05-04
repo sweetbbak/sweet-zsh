@@ -117,7 +117,8 @@ function __check_plugin() {
     if [ -f "$1" ]; then
         __source "${1}"
     else
-        git clone "${2}" "$HOME/.config/zsh"
+        cd "$HOME/.config/zsh" || echo "couldnt CD"
+        git clone "${2}" 
         [ -f "$1" ] && source "${1}"
         [ ! -f "$1" ] && echo -e "[WARN] error loading plugin [$2]"
     fi
