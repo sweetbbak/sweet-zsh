@@ -9,37 +9,34 @@ export DIFFPROG="nvim -d"
 export MANPAGER="less -R --use-color -Dd+r -Du+b"
 export MANROFFOPT='-c'
 
-printf "\x1b[38;5;116m%s\x1b[0m\n" "／人◕ ‿‿ ◕人＼ [$USER@$HOST]"
+printf "\x1b[38;5;116m%s\x1b[0m\n" "／人◕ ‿‿ ◕人＼\n[$USER@$HOST]"
 
 # ╭────────╮
 # │starship│
 # ╰────────╯
-#
-# --- uncomment your theme ---
-# STARSHIP_THEME="$HOME/.config/starship/starship.toml"
-STARSHIP_THEME="$HOME/.config/starship/gum.toml"
-# ---------------------------
 
+# --- uncomment your theme ---
+STARSHIP_THEME="$HOME/.config/starship/starship.toml"
+# STARSHIP_THEME="$HOME/.config/starship/gum.toml"
+# ---------------------------
 
 export STARSHIP_CONFIG="$STARSHIP_THEME"
 
 if command -v starship >/dev/null; then
-  eval "$(starship init zsh)"
-else
-  # fallback prompt
-  PROMPT='%(?.%F{green}√.%F{red}?%?)%f %B%F{240}%1~%f%b %# '
-  RPROMPT='%*'
-  export PROMPT RPROMPT
+    eval "$(starship init zsh)"
+else # fallback prompt
+    PROMPT='%(?.%F{green}√.%F{red}?%?)%f %B%F{240}%1~%f%b %# '
+    RPROMPT='%*'
+    export PROMPT RPROMPT
 fi
-
 
 # ╭──────╮
 # │Zoxide│
 # ╰──────╯
 #
 if command -v zoxide &>/dev/null; then
-  eval "$(zoxide init zsh)"
-  true
+    eval "$(zoxide init zsh)"
+    true
 fi
 
 # ╭────────╮
@@ -47,7 +44,8 @@ fi
 # ╰────────╯
 #
 
-WORDCHARS='~!#$%^&*(){}[]<>?.+;-'
+export WORDCHARS='~!#$%^&*(){}[]<>?.+;-'
+
 bindkey '^[[1;5C' forward-word     # ctrl + ->
 bindkey '^[[1;5D' backward-word    # ctrl + <-
 bindkey '^H' backward-kill-word    # ctrl+backspace delete word
@@ -67,6 +65,7 @@ zle -N down-line-or-beginning-search
 
 bindkey "^[[A" up-line-or-beginning-search # Up
 bindkey "^[[B" down-line-or-beginning-search # Down
+
 # ╭───────╮
 # │Options│
 # ╰───────╯
@@ -107,52 +106,34 @@ bindkey '^e' alias-expension
 function __source() {
     # shellcheck source=/dev/null
     [ -f "$1" ] && source "$1"
-    [ ! -f "$1" ] && echo -e "file [$1] is missing" && return 1
-}
-
-# {sourced_file} {plugin_repo}
-function __check_plugin() {
-    # shellcheck source=/dev/null
-    if [ -f "$1" ]; then
-        __source "${1}"
-    else
-        cd "$HOME/.config/zsh" || echo "couldnt CD"
-        dirname="$(basename "$2")"
-        dirname="${dirname/.git/}"
-
-        [  ! -d "$dirname" ] && git clone "${2}" 
-
-        [ -f "$1" ] && source "${1}"
-        [ ! -f "$1" ] && echo -e "[WARN] error loading plugin [$2]"
-    fi
+    [ ! -f "$1" ] && echo -e "[$(date '+%F %I:%M:%S')] File is missing: [$1]" >> "$HOME/.config/zsh/sweet-zsh.log"
 }
 
 # user defined aliases - functiongs
 __source "$HOME/.config/zsh/alias.zsh"
+
+# functions
 __source "$HOME/.config/zsh/functions.zsh"
 
 # double tap ESC to prepend line with SUDO
-[ ! -f  "$HOME/.config/zsh/zsh-sudo-plugin.zsh" ] && {
-    if command -v curl >/dev/null; then
-        curl -fsSl https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/plugins/sudo/sudo.plugin.zsh > "$HOME/.config/zsh/zsh-sudo-plugin.zsh"
-    else 
-        wget https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/plugins/sudo/sudo.plugin.zsh -O "$HOME/.config/zsh/zsh-sudo-plugin.zsh"
-    fi
-}
 __source "$HOME/.config/zsh/zsh-sudo-plugin.zsh"
 
 #fzf tab complete 
-__check_plugin "$HOME/.config/zsh/fzf-tab/fzf-tab.plugin.zsh" "https://github.com/Aloxaf/fzf-tab.git"
+# https://github.com/Aloxaf/fzf-tab.git
+__source "$HOME/.config/zsh/fzf-tab/fzf-tab.plugin.zsh"
 
 # fzf reverse ctrl_r history search
-__check_plugin "$HOME/.config/zsh/zsh-fzf-history-search/zsh-fzf-history-search.zsh" "https://github.com/joshskidmore/zsh-fzf-history-search.git"
+# https://github.com/joshskidmore/zsh-fzf-history-search.git
+__source "$HOME/.config/zsh/zsh-fzf-history-search/zsh-fzf-history-search.zsh"
 
 # auto suggestions
-__check_plugin "$HOME/.config/zsh/zsh-autosuggestions/zsh-autosuggestions.zsh" "https://github.com/zsh-users/zsh-autosuggestions.git"
+# https://github.com/zsh-users/zsh-autosuggestions.git
+__source "$HOME/.config/zsh/zsh-autosuggestions/zsh-autosuggestions.zsh"
+zstyle ':autocomplete:*' default-context history-incremental-search-backward
 
 # tab sources for better completion
-zstyle ':autocomplete:*' default-context history-incremental-search-backward
-__check_plugin "$HOME/.config/zsh/fzf-tab-source/fzf-tab-source.plugin.zsh" "https://github.com/Freed-Wu/fzf-tab-source.git"
+# https://github.com/Freed-Wu/fzf-tab-source.git
+__source "$HOME/.config/zsh/fzf-tab-source/fzf-tab-source.plugin.zsh"
 
 # fzf completion options
 zstyle ':completion:*' fzf-search-display true
@@ -166,4 +147,5 @@ zstyle ':completion:*:descriptions' format '[%d]'
 zstyle ':completion:*' list-colors '${(s.:.)LS_COLORS}'
 
 # Syntax highlighting must be loaded last
-__check_plugin "$HOME/.config/zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" "https://github.com/zsh-users/zsh-syntax-highlighting.git" 
+# https://github.com/zsh-users/zsh-syntax-highlighting.git 
+__source "$HOME/.config/zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
