@@ -23,11 +23,10 @@ STARSHIP_THEME="$HOME/.config/starship/gum.toml"
 
 export STARSHIP_CONFIG="$STARSHIP_THEME"
 
-if command -v starship >/dev/null && [ "$STARSHIP_ON" -eq 1 ]; then
+if command -v starship >/dev/null; then
   eval "$(starship init zsh)"
 else
   # fallback prompt
-  echo -e "\e[33;3mWelcome $USER\e[0m"
   PROMPT='%(?.%F{green}√.%F{red}?%?)%f %B%F{240}%1~%f%b %# '
   RPROMPT='%*'
   export PROMPT RPROMPT
