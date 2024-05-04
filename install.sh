@@ -11,7 +11,7 @@ mv-backup() {
         mv "$2" "$2-bak"
         mv-backup "${1}" "${2}"
     else
-        builtin cp -r "$1" "$2"
+        cp -r "$1" "$2"
     fi
 }
 
