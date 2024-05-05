@@ -9,19 +9,15 @@ SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 
 # example: mv-backup ./conf/.zshenv $HOME/.zshenv
 mv-backup() {
-    if [ -f "$2" ] || [ -d "$2" ]; then
-        mv "$2" "$2-bak"
-        mv-backup "${1}" "${2}"
-    else
-        cp -r "$1" "$2"
-    fi
+    cp -r "$1" "$2"
 }
 
 copy-config() {
     mv-backup "$SCRIPT_DIR/conf/.zshenv" "${HOME}/.zshenv"
-    mv-backup "$SCRIPT_DIR/conf/.zshrc" "${HOME}/.config/zsh"
-    mv-backup "$SCRIPT_DIR/conf/functions.zsh" "${HOME}/.config/zsh"
-    mv-backup "$SCRIPT_DIR/conf/alias.zsh" "${HOME}/.config/zsh"
+    mv-backup "$SCRIPT_DIR/conf/zsh/.zshenv" "${HOME}/.config/zsh/.zshenv"
+    mv-backup "$SCRIPT_DIR/conf/zsh/.zshrc" "${HOME}/.config/zsh"
+    mv-backup "$SCRIPT_DIR/conf/zsh/functions.zsh" "${HOME}/.config/zsh"
+    mv-backup "$SCRIPT_DIR/conf/zsh/alias.zsh" "${HOME}/.config/zsh"
 }
 
 function __check_plugin() {
