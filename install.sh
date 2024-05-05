@@ -19,7 +19,9 @@ mv-backup() {
 
 copy-config() {
     mv-backup "$SCRIPT_DIR/conf/.zshenv" "${HOME}/.zshenv"
-    mv-backup "$SCRIPT_DIR/conf/zsh" "${HOME}/.config/zsh"
+    mv-backup "$SCRIPT_DIR/conf/.zshrc" "${HOME}/.config/zsh"
+    mv-backup "$SCRIPT_DIR/conf/functions.zsh" "${HOME}/.config/zsh"
+    mv-backup "$SCRIPT_DIR/conf/alias.zsh" "${HOME}/.config/zsh"
 }
 
 function __check_plugin() {
@@ -70,6 +72,7 @@ installer() {
 }
 
 main() {
+    [ -d "$HOME/.config/zsh" ] && mv "$HOME/.config/zsh" "$HOME/.config/zsh-bak"
     installer
     copy-config
 }
